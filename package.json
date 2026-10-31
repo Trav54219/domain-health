@@ -1,0 +1,9 @@
+{
+  "name": "domain-health",
+  "version": "1.0.0",
+  "description": "Free sending-domain health checks: MX, SPF, DKIM, DMARC, blocklists, domain age.",
+  "type": "module",
+  "bin": { "domain-health": "cli.mjs" },
+  "scripts": { "test": "node --test" },
+  "license": "MIT"
+}

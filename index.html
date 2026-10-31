@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Domain Health: free SPF, DKIM, DMARC and MX check for cold email domains</title>
+  <meta name="description" content="Check every sending domain at once: MX, SPF lookups, DKIM, DMARC policy, domain age. Runs in your browser, with the exact DNS record to add when something fails.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Domain health</h1>
+      <p class="lede">Paste your sending domains. Get MX, SPF, DKIM, DMARC and domain age for all of them at once, with the exact record to add when one fails.</p>
+    </header>
+
+    <form id="form">
+      <label for="domains">Domains, one per line or comma separated</label>
+      <textarea id="domains" rows="5" placeholder="acme.com&#10;tryacme.com&#10;getacme.co" spellcheck="false" autocomplete="off"></textarea>
+      <div class="row">
+        <div class="field">
+          <label for="selector">DKIM selector (optional)</label>
+          <input id="selector" placeholder="e.g. google" spellcheck="false" autocomplete="off">
+        </div>
+        <button type="submit" id="go">Check domains</button>
+      </div>
+    </form>
+
+    <section id="summary" hidden>
+      <div class="counts" id="counts"></div>
+      <div class="actions">
+        <button type="button" id="copy-link" class="ghost">Copy share link</button>
+        <button type="button" id="csv" class="ghost">Download CSV</button>
+      </div>
+    </section>
+
+    <section id="results" aria-live="polite"></section>
+
+    <section class="notes">
+      <h2>What gets checked</h2>
+      <dl>
+        <dt>MX</dt><dd>The domain can receive replies and bounces, and which provider hosts it.</dd>
+        <dt>SPF</dt><dd>Exactly one record, its DNS lookups counted through every include against the limit of 10, a sensible <code>all</code> at the end, and your mail provider included.</dd>
+        <dt>DKIM</dt><dd>A public key at 33 common selectors, plus yours. A miss can still mean a custom selector, so it's a warning, not a failure.</dd>
+        <dt>DMARC</dt><dd>One record with a policy. Gmail and Yahoo require one from bulk senders.</dd>
+        <dt>Domain age</dt><dd>From the registry. Under 30 days old is too new to send cold email.</dd>
+        <dt>Website</dt><dd>The domain resolves, so a prospect who types it in lands on something.</dd>
+        <dt>Blocklists</dt><dd>Not checked in the browser: Spamhaus and SURBL refuse lookups from public DNS. The <a href="https://github.com/Trav54219/domain-health">command-line version</a> checks them from your own network and can run daily with a Slack alert.</dd>
+      </dl>
+      <p class="privacy">Runs in your browser. Each domain is sent to Cloudflare's and Google's public DNS and to its registry's RDAP server. Nothing is stored.</p>
+    </section>
+
+    <footer>
+      Built by <a href="https://trav54219.github.io/gtm-engineering-portfolio/">Travis Heurtelou</a>, GTM engineer · <a href="https://github.com/Trav54219/domain-health">Source on GitHub</a> · MIT
+    </footer>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

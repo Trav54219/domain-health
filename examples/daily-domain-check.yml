@@ -1,0 +1,18 @@
+# Copy to .github/workflows/ in your own repo, next to a domains.txt (one domain per line).
+# Add a SLACK_WEBHOOK_URL secret to get a message when a domain fails or warns.
+name: daily domain check
+on:
+  schedule:
+    - cron: "0 13 * * *" # 13:00 UTC every day
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npx --yes github:Trav54219/domain-health --file domains.txt --system-dns --slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
